@@ -14,6 +14,7 @@ public class WebServerCustomizer implements WebServerFactoryCustomizer<Configura
     // 기본 오류 페이지를 customize 한다.
     public void customize(ConfigurableWebServerFactory factory) {
         //ErrorPage(오류 코드, 이동 할 페이지경로) 생성
+        //-> 해당 오류 코드가 발생하면 페이지 경로로 이동하라고 설정하는 에러페이지임.
         ErrorPage errorPage404 = new ErrorPage(HttpStatus.NOT_FOUND, "/error-page/404");
         ErrorPage errorPage500 = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error-page/500");
         ErrorPage errorPageEx = new ErrorPage(RuntimeException.class, "/error-page/500");

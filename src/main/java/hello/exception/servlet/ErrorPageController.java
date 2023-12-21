@@ -1,11 +1,18 @@
 package hello.exception.servlet;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
+
 //오류 발생 시 처리할 수 있는 컨트롤러
 @Slf4j
 @Controller
@@ -32,6 +39,25 @@ public class ErrorPageController {
         printErrorInfo(request);
         return "error-page/500";
     }
+
+    @RequestMapping(value = "/error-page/500", produces = MediaType.APPLICATION_JSON_VALUE)
+    //produces -> 클라이언트가 보내는 Accept에 따라 어떤 것이 호출되는 지 알려준다.
+    //같은 주소가 있더라도 produces로 JSON을 설정해둔 이 메서드는 application_json으로 요청이 들어오면 실행된다.
+    public ResponseEntity<Map<String, Object>> errorPage500Api(
+            HttpServletRequest request, HttpServletResponse response) {
+        log.info("API errorPage 500");
+
+        Map<String, Object> result = new HashMap<>();
+        Exception ex =(Exception) request.getAttribute(ERROR_EXCEPTION);
+        result.put("status", request.getAttribute(ERROR_STATUS_CODE));
+        result.put("message", ex.getMessage());
+
+        Integer statusCode = (Integer) request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        return new ResponseEntity<>(result, HttpStatus.valueOf(statusCode));
+
+    }
+
+
 
     private void printErrorInfo(HttpServletRequest request) {
         log.info("ERROR_EXCEPTION: {}", request.getAttribute(ERROR_EXCEPTION));

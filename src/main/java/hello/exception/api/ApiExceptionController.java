@@ -16,6 +16,9 @@ public class ApiExceptionController {
             // /api/members/ex로 요청이 들어오면 message를 저장.
             throw new RuntimeException("잘못된 사용자"); //RuntimeException("message")
         }
+        if (id.equals("bad")) {
+            throw new IllegalArgumentException("잘못된 입력 값");
+        }
         return new MemberDto(id, "hello " + id);
     }
 
